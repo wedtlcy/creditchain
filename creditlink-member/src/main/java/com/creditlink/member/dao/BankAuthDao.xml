@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.member.dao.BankAuthDao">
+
+	<!-- t_bankcardfourelement所有列 -->
+	<sql id="bankcardfourelementColumns">
+		a.ID id,
+		a.BANKCARD bankCard,
+		a.NAME name,
+		a.MOBILE mobile,
+		a.IDCARD idCard,
+		a.CREATETIME createTime,
+		a.CREATEUSER createUser,
+		a.UPDATETIME updateTime,
+		a.UPDATEUSER updateUser
+	</sql>
+	
+	<select id="find" parameterType="com.creditlink.member.entity.BankCardFourElement" resultType="com.creditlink.member.entity.BankCardFourElement">
+		select <include refid="bankcardfourelementColumns"></include>
+		from t_bankcardfourelement a 
+		where 1 = 1
+		<if test=" bankCard != null">
+			and a.BANKCARD = #{bankCard}
+		</if> 
+		<if test=" name != null">
+			and a.NAME = #{name}
+		</if> 
+		<if test=" mobile != null">
+			and a.MOBILE = #{mobile}
+		</if> 
+		<if test=" idCard != null">
+			and a.IDCARD = #{idCard}
+		</if> 
+		order by a.CREATETIME desc limit 1
+	</select>
+</mapper>

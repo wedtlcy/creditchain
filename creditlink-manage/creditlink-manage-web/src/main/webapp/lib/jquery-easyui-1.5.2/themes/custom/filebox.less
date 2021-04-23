@@ -1,0 +1,41 @@
+.filebox {
+  .textbox-value{    
+    vertical-align: top;
+    position: absolute;
+    top: 0;
+    left: -5000px;
+  }
+  .textbox-button{
+    padding: 0 4px !important;
+    border-left: 1px solid @bd-primary;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAA8BAMAAABV383JAAAAHlBMVEUynfs3w/4zovw2u/00p/w2v/41s/01t/00r/00rPzxdhv5AAAAIklEQVQI12MQwIABcGiABAugMAEOG6BwAhQ6IEEFFIgFAAByJQ2BbZsmZQAAAABJRU5ErkJggg==);
+    background-position: center;
+    background-size: contain;
+    background-repeat: repeat-x;
+    .l-btn-text{
+      color: #fff;
+      font-size: 12px;
+    }
+    &:hover{
+      .hover;
+    }
+  }
+}
+
+.filebox-label {
+  display: inline-block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  background: url('images/blank.gif') no-repeat;
+}
+
+.l-btn-disabled {
+  .filebox-label{
+    cursor: default;
+  }
+}

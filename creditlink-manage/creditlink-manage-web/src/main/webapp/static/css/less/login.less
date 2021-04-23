@@ -1,0 +1,156 @@
+.login-page{
+  position: relative;
+  height: 100%;
+  .login-body{
+    overflow: hidden;
+    height: 100%;
+    text-align: center;
+    background-color: @bg-nav;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEUsLzQoKzCPJnE8AAAAGElEQVQI12NgZGBiYGHgYBBgUGBwYGgAAAL9AQCFbpdUAAAAAElFTkSuQmCC);
+    background-repeat: repeat;
+    .bg-top-img{
+      vertical-align: middle;
+    }
+    .login-outer-wrap{
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 1000px;
+      height: 270px;
+      margin: -55px 0 0 -500px;
+      .left-wrap{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 500px;
+        background-image: url(./../images/bg/login_split_line.png);
+        background-size: 2px;
+        background-position: right center;
+        background-repeat: no-repeat;
+        .word-wrap{
+          position: absolute;
+          overflow: hidden;
+          top: 50%;        
+          width: 100%;
+          margin-top: -35px;
+          margin-left: -16px;
+          text-align: center;
+        }
+      }
+      .right-wrap{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        left: 500px;
+        padding: 10px 100px 0;
+        text-align: left;
+        .form-login{
+          overflow: visible;
+          .form-group{
+            text-align: left;
+            .textbox{
+              overflow: visible;
+              background-color: #E5E6E6;
+              .textbox-addon{
+                top: -5px !important;
+                left: 6px !important;
+                width: 46px;
+                height: 100%;
+                background-image: url(./../images/bg/login_ipt_icon.png);
+                background-repeat: no-repeat;
+                background-position: top center;
+                background-size: 46px;
+                .textbox-icon{
+                  width: 83% !important;
+                  height: 92% !important;
+                }
+              }
+              .textbox-text{
+                margin-left: 56px !important;
+                width: 235px !important;
+                padding: 0 !important;
+                background-color: #E5E6E6 !important;
+              }
+            }
+            &.form-verify{
+              position: relative;
+              .textbox{
+                input.textbox-text{
+                  width: 135px !important;
+                }
+              }
+              .verify-code-wrap{
+                position: absolute;
+                top:0;
+                right: 5px;
+                bottom: 0;
+                width: 96px;
+                img{
+                  width: 100%;
+                  height: 30px;
+                  margin-top: 5px;
+                  vertical-align: middle;
+                }
+              }
+            }
+            .error-alert{
+              font-size: 12px;
+              background-color: transparent;
+              margin: 0;
+              border: 0;
+            }
+          }
+          .btn-login{
+            position: relative;
+            z-index: 2;
+            height: 40px;
+          }
+          .link-forget{
+            display: inline-block;
+            float: right;
+            margin-top: 6px;
+            font-size: 12px;
+            color: @title-sub;
+            text-decoration: none;
+            .clearfix;
+            &:hover{
+              text-decoration: underline;
+            }
+          }
+          .txt-hint{
+            margin-top: 20px;
+            font-size: 12px;
+            color: #F9263E;
+          }
+        }
+      }
+    }
+    .footer{
+      position: fixed;
+      width: 100%;
+      text-align: center;
+      bottom: 35px;
+      .copy-right{
+        margin: 0;
+        font-size: 14px;
+        color: @title-sub;
+      }
+      .custom-box{
+        display: inline-block;
+        margin-left: 8px;
+        .link{
+          color: @font-primary;
+          font-size: 18px;
+          font-style: italic;
+          text-decoration: none;
+          &:hover{
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}

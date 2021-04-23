@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.center.provider.dao.BankCardDao">
+
+	<!-- ******************************************银行卡四要素 start******************************************-->
+	<!-- 昨日新增四要素数量 -->
+	<select id="addedBankCardFourElementCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from bus_index_bank_fourelement_added_temp 
+		where 1 = 1 and STATUS = #{status} and DATE(CREATETIME) = #{time}
+	</select>
+	<!-- 昨日新增四要素(分页) -->
+	<select id="addedBankCardFourElement" parameterType="java.util.Map" resultType="java.util.Map">
+		select ID addedTempId,PRODUCTID productId,MEMBERID memberId,BANKCARD bankCard,IP ip,PATH path,
+		STATUS status,CREATETIME createTime from bus_index_bank_fourelement_added_temp 
+		where 1 = 1 and STATUS = #{status} and DATE(CREATETIME) = #{time}
+		limit #{pageStart},#{pageSize}		
+	</select>
+	<!-- 昨日新增四要素(全部) -->
+	<select id="addedBankCardFourElementAll" parameterType="java.util.Map" resultType="java.util.Map">
+		select ID addedTempId,PRODUCTID productId,MEMBERID memberId,BANKCARD bankCard,IP ip,PATH path,
+		STATUS status,CREATETIME createTime from bus_index_bank_fourelement_added_temp 
+		where 1 = 1 and STATUS = #{status} and DATE(CREATETIME) = #{time}
+		limit #{pageStart},#{pageSize}		
+	</select>
+	
+	<!--当日银行卡四要素修改记录数量  -->
+	<select id="bankCardFourElementUpdateCount" parameterType="java.util.Map" resultType="java.lang.Long">
+		select count(1) from bus_index_bank_fourelement_update_record 
+		where 1 = 1 and STATUS = #{status} and DATE(CREATETIME) = #{time}
+	</select>
+	
+	<!-- 当日银行卡四要素修改记录(分页) -->
+	<select id="bankCardFourElementUpdate" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+			b.ADDEDTEMPID addedTempId,
+			b.PRODUCTID productId,
+			b.MEMBERID memberId,
+			b.BANKCARD bankCard,
+			b.IP ip,
+			b.PATH path,
+			b.STATUS status
+		FROM
+			bus_index_bank_fourelement_update_record a
+		INNER JOIN bus_index_bank_fourelement b ON (a.BANKCARDID = b.ID)
+		where 1 = 1 and a.STATUS = #{status} and DATE(a.CREATETIME) = #{time}
+		limit #{pageStart},#{pageSize}		
+	</select>
+	
+	<!--  银行卡四要素日志(单条) -->
+	<insert id="insertBankCardFourElementLog" parameterType="com.creditlink.center.provider.entity.BankCardFourElementLogEntity">
+		insert into bus_index_bank_four_log(ID,BANKCARDID,PRODUCTID,MEMBERID,BANKCARD,STATUS,ISUSER,REQSERIALNO,
+		ORDERNO,REMARK,CREATETIME)
+		values(#{id},#{bankCardId},#{productId},#{memberId},#{bankCard},#{status},#{isUser},#{remark},#{createTime},#{reqSerialNo},#{orderNo})
+	</insert>
+	
+	<!--   银行卡四要素日志(批量) -->
+	<insert id="insertBatchBankCardFourElementLog" parameterType="java.util.List">
+	insert into bus_index_bank_fourelement_log(ADDEDTEMPID,PRODUCTID,MEMBERID,BANKCARD,STATUS,ISUSE,REQSERIALNO,
+	ORDERNO,REMARK,CREATETIME)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(
+				#{item.addedTempId},
+				#{item.productId},
+				#{item.memberId},
+				#{item.bankCard},
+				#{item.status},
+				#{item.isUse},
+				#{item.reqSerialNo},
+				#{item.orderNo},
+				#{item.remark},
+				#{item.createTime}
+			)
+		</foreach>
+	</insert>
+	
+	<!-- ******************************************银行卡四要素 end******************************************-->
+</mapper>

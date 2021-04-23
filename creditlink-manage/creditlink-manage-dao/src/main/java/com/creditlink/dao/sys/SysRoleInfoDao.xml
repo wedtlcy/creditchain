@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.sys.SysRoleInfoDao">
+
+	<!-- sys_role_inf所有列 -->
+	<sql id="sysRoleInfoColumns">
+		sri.ROLE_ID roleId,
+		sri.ROLE_NAME roleName,
+		sri.ROLE_DESC roleDesc,
+		sri.ROLE_PAR_ID roleParId,
+		sri.STATUS status,
+		sri.REMARK remark,
+		sri.CREATE_TIME createTime,
+		sri.CREATE_USER createUser,
+		sri.UPDATE_TIME updateTime,
+		sri.UPDATE_USER updateUser
+	</sql>
+	
+	<!-- 查询条件 -->
+	<sql id="findSysRoleInfoCondition">
+		<if test="roleId != null">
+			and sri.ROLE_ID = #{roleId}
+		</if>
+		<if test="roleName != null and roleName != ''">
+			and sri.ROLE_NAME like CONCAT('%',#{roleName},'%')
+		</if>
+		<if test="status != null">
+			and sri.STATUS = #{status}
+		</if>
+	</sql>
+	
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.creditlink.bean.po.sys.SysRoleInfoPo" useGeneratedKeys="true"
+	 keyProperty="roleId">
+	 	insert into sys_role_inf
+	 	<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		ROLE_NAME,ROLE_DESC,ROLE_PAR_ID,STATUS,
+	 		REMARK,CREATE_TIME,CREATE_USER,UPDATE_TIME,UPDATE_USER
+	 	</trim>
+	 	<trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+	 		#{roleName},#{roleDesc},#{roleParId},#{status},
+	 		#{remark},#{createTime},#{createUser},#{updateTime},#{updateUser}
+	 	</trim>
+	 </insert>
+	 
+	<!-- 查询(单条) -->
+	<select id="find" parameterType="com.creditlink.bean.po.sys.SysRoleInfoPo" resultType="com.creditlink.bean.po.sys.SysRoleInfoPo">
+		select <include refid="sysRoleInfoColumns"></include> from sys_role_inf sri 
+		where 1 = 1 
+		<include refid="findSysRoleInfoCondition"></include>
+		limit 1
+	</select>	
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.creditlink.bean.po.sys.SysRoleInfoPo">
+		update sys_role_inf 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="roleName != null and roleName != ''">
+				ROLE_NAME = #{roleName},
+			</if>
+				ROLE_DESC = #{roleDesc},
+			<if test="roleParId != null">
+				ROLE_PAR_ID = #{roleParId},
+			</if>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+				REMARK = #{remark},
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="updateUser != null">
+				UPDATE_USER = #{updateUser},
+			</if>
+		</trim>
+		where ROLE_ID = #{roleId}
+	</update>
+	
+	 <!-- 批量更新角色状态 -->
+	 <update id="updateStatusBatch" parameterType="com.creditlink.bean.bo.UpdateStatusBo">
+	 	update sys_role_inf set STATUS = #{newStatus},UPDATE_USER = #{updateUser},UPDATE_TIME = #{updateTime}
+	 	where  STATUS = #{oldStatus} and ROLE_ID in(${ids})
+	 </update>
+	 
+	<!-- 查询-->
+	<select id="findAll" parameterType="com.creditlink.bean.po.sys.SysRoleInfoPo" resultType="com.creditlink.bean.po.sys.SysRoleInfoPo">
+		select <include refid="sysRoleInfoColumns"></include> from sys_role_inf sri 
+		where 1 = 1 
+		<include refid="findSysRoleInfoCondition"></include>
+		order by sri.CREATE_TIME desc 
+	</select>
+	
+	<!--查询用户角色信息  -->
+	<select id="getUserRoleInfo" parameterType="java.lang.Long" resultType="com.creditlink.bean.po.sys.SysRoleInfoPo">
+		select <include refid="sysRoleInfoColumns"></include>
+			from sys_role_inf sri
+			left join sys_user_role_rel t2 on sri.role_id=t2.role_id
+			where sri.status='1'
+			and t2.status='1'
+			and t2.user_id=#{userId}
+	</select>
+	
+	<!-- 角色管理查询 -->
+	<select id="roleManagerQueryCount" parameterType="java.util.Map" 
+	 resultType="java.lang.Long">
+	  select count(1) from sys_role_inf sri 
+	  where 1 = 1 
+	  <include refid="findSysRoleInfoCondition"></include>
+	 </select>
+	 
+	 <!-- 角色管理查询数量 -->
+	<select id="roleManagerQuery" parameterType="java.util.Map" 
+	 	resultType="java.util.Map">
+	  select <include refid="sysRoleInfoColumns"></include> from sys_role_inf sri
+	  where 1 = 1 
+	  <include refid="findSysRoleInfoCondition"></include>
+	  order by sri.CREATE_TIME desc 
+	  limit #{pageStart},#{pageSize}
+	 </select>
+	 
+</mapper>

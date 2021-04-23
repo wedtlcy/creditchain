@@ -1,0 +1,77 @@
+.btn{
+	overflow: hidden;
+	display: inline-block;
+	padding: 8px 26px;
+	margin-right: 20px;
+	border-width: 0;
+	border-style: solid;
+	border-radius: 2px;
+	text-align: center;
+	font-size: 16px;
+	outline: none;
+	&:last-child{
+		margin-right: 0;
+	}
+	&.btn-block{
+		width: 100%;
+		padding: 4px 0;
+	}
+	&.btn-link{
+		color: @font-primary;
+		background-color: transparent;
+		border-color: transparent;
+	}
+	&.btn-primary{
+		color: @btn-color-main;
+		border-color: @font-primary;
+		background-color: @font-primary;
+		.selected-img;
+	}
+	&.btn-default{
+		color: @font-white;
+		background-color: @btn-bg-sub;
+		border-color: @btn-bg-sub;
+	}
+	&.btn-info{
+		color: @font-white;
+		background-color: @bg-nav-light;
+		border-color: @bg-nav-light;
+	}
+	&:hover{
+		opacity: 0.85;
+		filter: alpha(opacity=85);
+		outline: none;
+	}
+
+	&:active,
+	&:linked,
+	&:visited{
+		outline: none;
+	}
+	&:disabled{
+		background-color: @ipt-title;
+		border-color: lighten(@ipt-title, 10%);
+		background-image: none;
+		color: #fff;
+		&:hover{
+			cursor: not-allowed;
+			opacity: 1;
+		}
+	}
+	&.btn-search{
+		padding: 8px 17px;
+		.l-btn-left{
+			.l-btn-text{				
+				font-size: 16px;
+				margin-left: 30px;
+			}
+		}
+	}
+	&.btn-form-search{
+		padding: 3px 8px;
+	}
+	&.btn-reset{
+		font-size: 14px;
+		padding: 5px 16px 6px;
+	}
+}

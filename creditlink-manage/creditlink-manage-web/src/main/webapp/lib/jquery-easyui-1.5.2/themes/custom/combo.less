@@ -1,0 +1,37 @@
+.combo{
+  padding: 0 1px !important;
+  .combo-arrow {
+    width: 18px;
+    height: 20px;
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+    opacity: 0.6;
+    filter: alpha(opacity=60);
+    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAGBAMAAAAI3hL1AAAAJ1BMVEUAAADR0tXR0tXR0tXR0tXR0tXR0tXR0tXR0tXR0tXR0tXR0tXR0tWbYH1vAAAADHRSTlMA8Nu9aUIRBpeWJiVioZ3cAAAAKklEQVQI12OYc+bMmRMMxUDSnIFN58yhBAaGjWekGBgYWM8EMACBCwMDAB4FC/P2AKV1AAAAAElFTkSuQmCC) no-repeat center center;
+    background-color: #F2F2F2;
+    &:hover{
+      background-color: #e6e6e6;
+    }
+    .textbox-icon-disabled:hover {
+      cursor: default;
+    }
+  }
+  .combo-arrow-hover {
+    opacity: 1.0;
+    filter: alpha(opacity=100);
+    background-color: #e6e6e6;
+  }
+  .combo-panel {
+    overflow: auto;
+    background-color: #ffffff;
+  }
+}
+.combo-p{
+  .combo-panel{
+    border: 1px solid @bd-primary !important;
+    border-top: 0;
+    background-color: #fff;
+  }
+}

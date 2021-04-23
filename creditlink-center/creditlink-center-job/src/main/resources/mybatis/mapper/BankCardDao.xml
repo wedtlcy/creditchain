@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.center.job.dao.BankCardDao">
+
+	<!-- 银行卡四要素日志查询 -->
+	<select id="findBankCardFourLog" parameterType="com.creditlink.center.job.bo.BankCardFourElementLogBo" 
+		resultType="com.creditlink.center.job.entity.bank.BankCardFourElementLogEntity">
+		select LOGID logId,ADDEDTEMPID addedTempId,
+		PRODUCTID productId,MEMBERID memberId,
+		BANKCARD bankCard,STATUS status,
+		ISUSE isUse from bus_index_bank_fourelement_log
+		where 1 = 1 
+		<if test="isUse != null">
+			and ISUSE = #{isUse}
+		</if>
+		<if test="handlerStatus != null">
+			and HANDLERSTATUS = #{handlerStatus}
+		</if>
+		order by CREATETIME desc
+	</select>
+	
+	<!--更新银行卡四要素次数  -->
+	<update id="updateBankCardFourCount" parameterType="com.creditlink.center.job.bo.BankCardFourElementLogBo">
+		update bus_index_bank_fourelement set COUNT = COUNT + 1,
+		SUCCESS = SUCCESS + #{success},ERROR = ERROR + #{error}
+		where 1 = 1 and ADDEDTEMPID = #{addedTempId} 
+	</update>
+	
+	<!-- 更新银行四要素日志处理状态 -->
+	<update id="updateBankCardFourLogHandlerstatus" parameterType="java.util.Map">
+		update bus_index_bank_fourelement_log set ISUSE = #{isUse},HANDLERSTATUS = #{handlerstatus}
+		where 1 = 1 and LOGID = #{logId}
+	</update>
+	
+	<!-- 查询新增索引 -->
+	<select id="findFourElementAddTemp" parameterType="java.util.Map" resultType="com.creditlink.center.job.entity.bank.BankCardFourElementAddedTempEntity">
+		select ID id,PRODUCTID productId,MEMBERID memberId,BANKCARD bankCard, IP ip,PATH path,STATUS status,
+		CREATETIME createTime,CREATEUSER createUser,UPDATETIME updateTime,UPDATEUSER updateUser
+		from bus_index_bank_fourelement_added_temp where 1 = 1 and CREATETIME &lt;=  DATE_SUB(curdate(),INTERVAL 1 DAY)
+		<if test="status != null">
+			and STATUS = #{status}
+		</if>
+		order by CREATETIME desc limit 500
+	</select>
+	
+	<!-- 添加银行卡四要素索引信息 -->
+	<insert id="insertFourElement" parameterType="com.creditlink.center.job.entity.bank.BankCardFourElementEntity">
+		insert into bus_index_bank_fourelement
+		<trim prefix="(" suffixOverrides="," suffix=")">
+			<if test="addedTempId !=  null">
+				ADDEDTEMPID,
+			</if>
+			<if test="productId !=  null">
+				PRODUCTID,
+			</if>
+			<if test="memberId !=  null">
+				MEMBERID,
+			</if>
+			<if test="bankCard !=  null">
+				BANKCARD,
+			</if>
+			<if test="path !=  null">
+				PATH,
+			</if>
+			<if test="ip !=  null">
+				IP,
+			</if>
+			<if test="createTime !=  null">
+				CREATETIME,
+			</if>
+			<if test="createUser !=  null">
+				CREATEUSER,
+			</if>
+		</trim>
+		<trim prefix="VALUES(" suffixOverrides="," suffix=")">
+			<if test="addedTempId !=  null">
+				#{addedTempId},
+			</if>
+			<if test="productId !=  null">
+				#{productId},
+			</if>
+			<if test="memberId !=  null">
+				#{memberId},
+			</if>
+			<if test="bankCard !=  null">
+				#{bankCard},
+			</if>
+			<if test="path !=  null">
+				#{path},
+			</if>
+			<if test="ip !=  null">
+				#{ip},
+			</if>
+			<if test="createTime !=  null">
+				#{createTime},
+			</if>
+			<if test="createUser !=  null">
+				#{createUser},
+			</if>
+		</trim>
+	</insert>
+	
+	<!-- 查询四要素信息 -->
+	<select id="findFourElement" parameterType="com.creditlink.center.job.entity.bank.BankCardFourElementEntity" resultType="com.creditlink.center.job.entity.bank.BankCardFourElementEntity">
+		select ID id,ADDEDTEMPID addedTempId, PRODUCTID productId,MEMBERID memberId,BANKCARD bankCard, IP ip,PATH path,STATUS status,
+		CREATETIME createTime,CREATEUSER createUser,UPDATETIME updateTime,UPDATEUSER updateUser
+		from bus_index_bank_fourelement
+		where 1 = 1
+		<if test="productId != null">
+			and PRODUCTID = #{productId}
+		</if>
+		<if test="memberId != null">
+			and MEMBERID = #{memberId}
+		</if>
+		<if test="bankCard != null">
+			and BANKCARD = #{bankCard}
+		</if>
+		<if test="status != null">
+			and STATUS = #{status}
+		</if>
+		limit 1
+	</select>
+	
+	<!-- 银行卡四要素移库完成 -->
+	<update id="updateFourElementAddedStatus" parameterType="java.util.Map">
+		update bus_index_bank_fourelement_added_temp set STATUS = #{newStatus}
+		where STATUS = #{oldStatus} and ID = #{id}
+	</update>
+	
+	<!-- 银行卡四要素修改记录过期 -->
+	<update id="updateFourElementUpdateRecordStatus" parameterType="java.util.Map">
+		update bus_index_bank_fourelement_update_record set STATUS = #{newStatus}
+		where STATUS = #{oldStatus} and DATE(CREATETIME)  &lt;=  #{time}
+	</update>
+</mapper>

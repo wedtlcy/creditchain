@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.bas.BasContractInfoDao">
+
+	<!-- bas_contract_inf所有列 -->
+	<sql id="basContractInfoColumns">
+		bci.ID id,
+		bci.CONTRACT_CODE contractCode,
+		bci.CONTRACT_NAME contractName,
+		bci.CONTRACT_TYPE contractType,
+		bci.CONTRACT_CATEGORY contractCategory,
+		bci.CUST_TYPE custType,
+		bci.USER_ID userId,
+		bci.STATUS status,
+		bci.SIGN_DATE signDate,
+		bci.EFF_DATE effDate,
+		bci.EXP_DATE expDate,
+		
+		bci.REMARK remark,
+		bci.CREATE_TIME createTime,
+		bci.CREATE_USER createUser,
+		bci.UPDATE_TIME updateTime,
+		bci.UPDATE_USER updateUser
+	</sql>
+	
+	<!-- 查询条件 -->
+	<sql id="findBasContractInfoCondition">
+		<if test="id != null">
+			and bci.ID = #{id}
+		</if>
+		<if test="contractCode != null and contractCode != ''">
+			and bci.CONTRACT_CODE = #{contractCode}
+		</if>
+		<if test="contractName != null and contractName != ''">
+			and bci.CONTRACT_NAME = #{contractName}
+		</if>
+		<if test="contractType != null and contractType != ''">
+			and bci.CONTRACT_TYPE = #{contractType}
+		</if>
+		<if test="contractCategory != null and contractCategory != ''">
+			and bci.CONTRACT_CATEGORY = #{contractCategory}
+		</if>
+		<if test="custType != null and custType != ''">
+			and bci.CUST_TYPE = #{custType}
+		</if>
+		<if test="userId != null">
+			and bci.USER_ID = #{userId}
+		</if>
+		<if test="status != null and status != ''">
+			and bci.STATUS = #{status}
+		</if>
+		<if test="signDate != null">
+			and bci.SIGN_DATE = #{signDate}
+		</if>
+		<if test="effDate != null">
+			and bci.EFF_DATE = #{effDate}
+		</if>
+		<if test="expDate != null">
+			and bci.EXP_DATE = #{expDate}
+		</if>
+		
+		<if test="remark != null and remark != ''">
+			and bci.REMARK = #{remark}
+		</if>
+		<if test="createTime != null">
+			and bci.CREATE_TIME = #{createTime}
+		</if>
+		<if test="createUser != null">
+			and bci.CREATE_USER = #{createUser}
+		</if>
+	</sql>
+	
+	<sql id="insertKey">
+		<trim suffixOverrides=",">
+            <if test="contractCode != null and contractCode != ''">
+                CONTRACT_CODE,
+            </if>
+            <if test="contractName != null and contractName != ''">
+                CONTRACT_NAME,
+            </if>
+            <if test="contractType != null and contractType != ''">
+                CONTRACT_TYPE,
+            </if>
+             <if test="contractCategory != null and contractCategory != ''">
+                CONTRACT_CATEGORY,
+            </if>
+             <if test="userId != null">
+                USER_ID,
+            </if>
+             <if test="status != null and status != ''">
+                STATUS,
+            </if>
+             <if test="signDate != null">
+                SIGN_DATE,
+            </if>
+             <if test="effDate != null">
+                EFF_DATE,
+            </if>
+             <if test="expDate != null">
+                EXP_DATE,
+            </if>
+            <if test="remark != null and remark != ''">
+                REMARK,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="createUser != null and createUser != ''">
+                CREATE_USER,
+            </if>
+        </trim>
+	</sql>
+	<sql id="insertValue">
+		 <trim suffixOverrides=",">
+            <if test="contractCode != null and contractCode != ''">
+                #{contractCode},
+            </if>
+            <if test="contractName != null and contractName != ''">
+             	#{contractName},
+            </if>
+            <if test="contractType != null and contractType != ''">
+               	 #{contractType},
+            </if>
+             <if test="contractCategory != null and contractCategory != ''">
+                 #{contractCategory},
+            </if>
+             <if test="userId != null">
+                 #{userId},
+            </if>
+             <if test="status != null and status != ''">
+                 #{status},
+            </if>
+             <if test="signDate != null">
+                 #{signDate},
+            </if>
+             <if test="effDate != null">
+             	 #{effDate},
+            </if>
+             <if test="expDate != null">
+              #{expDate},
+            </if>
+            <if test="remark != null and remark != ''">
+            	 #{remark},
+            </if>
+            <if test="createTime != null">
+            	 #{createTime},
+            </if>
+            <if test="createUser != null and createUser != ''">
+            	 #{createUser},
+            </if>
+        </trim>
+	</sql>
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.creditlink.bean.po.bas.BasContractInfoPo" useGeneratedKeys="true"
+	 keyProperty="productId">
+	 	insert into bas_contract_inf(<include refid="insertKey"/>)
+	 	values(<include refid="insertValue"/>)
+	 </insert>
+	 
+	<!-- 查询(单条) -->
+	<select id="find" parameterType="com.creditlink.bean.po.bas.BasContractInfoPo" resultType="com.creditlink.bean.po.bas.BasContractInfoPo">
+		select <include refid="basContractInfoColumns"></include> from bas_contract_inf bci 
+		where 1 = 1 
+		<include refid="findBasContractInfoCondition"></include>
+		limit 1
+	</select>	
+	
+	<!-- 合同管理查询条件 -->
+	<sql id="contractManagerQueryCondition">
+		<if test="contractCode != null and contractCode != ''">
+			and bci.CONTRACT_CODE = #{contractCode}
+		</if>
+		<if test="contractName != null and contractName != ''">
+			and bci.CONTRACT_NAME like CONCAT('%',#{contractName},'%')
+		</if>
+		<if test="status != null and status != ''">
+			and bci.STATUS = #{status}
+		</if>
+	</sql>
+	
+	<!--合同管理查询数量 -->
+	<select id="contractManagerQueryCount" parameterType="java.util.Map" 
+	 resultType="java.lang.Long">
+	  select count(1) from bas_contract_inf bci 
+	  where 1 = 1 
+	  <include refid="contractManagerQueryCondition"></include>
+	 </select>
+	 
+	 <!-- 合同管理查询 -->
+	<select id="contractManagerQuery" parameterType="java.util.Map" 
+	 	resultType="java.util.Map">
+	  select <include refid="basContractInfoColumns"></include> from bas_contract_inf bci 
+	  where 1 = 1 
+	  <include refid="contractManagerQueryCondition"></include>
+	  order by bci.CREATE_TIME desc 
+	  limit #{pageStart},#{pageSize}
+	 </select>
+	 
+	  <!-- 更新状态 -->
+	 <update id="updateStatusBatch" parameterType="com.creditlink.bean.bo.UpdateStatusBo">
+	 	update bas_contract_inf set STATUS = #{newStatus},UPDATE_USER = #{updateUser},UPDATE_TIME = #{updateTime}
+	 	where  STATUS = #{oldStatus} and ID in(${ids})
+	 </update>
+	 
+	  <!-- 更新-->
+	<update id="update" parameterType="com.creditlink.bean.po.bas.BasContractInfoPo">
+		update bas_contract_inf 
+		<trim prefix="set" suffixOverrides=",">
+			 <if test="contractCode != null and contractCode != ''">
+                CONTRACT_CODE = #{contractCode},
+            </if>
+            <if test="contractName != null and contractName != ''">
+                CONTRACT_NAME = #{contractName},
+            </if>
+            <if test="contractType != null and contractType != ''">
+                CONTRACT_TYPE = #{contractType},
+            </if>
+             <if test="contractCategory != null and contractCategory != ''">
+                CONTRACT_CATEGORY = #{contractCategory},
+            </if>
+             <if test="custType != null and custType != ''">
+                CUST_TYPE = #{custType},
+            </if>
+             <if test="userId != null">
+                USER_ID = #{orgCode},
+            </if>
+             <if test="signDate != null">
+                SIGN_DATE = #{signDate},
+            </if>
+             <if test="effDate != null">
+                EFF_DATE = #{effDate},
+            </if>
+             <if test="expDate != null">
+                EXP_DATE = #{expDate},
+            </if>
+              <if test="remark != null and remark != ''">
+                REMARK = #{remark},
+            </if>
+ 		</trim>
+ 		where ID = #{id}
+ 	</update>
+</mapper>

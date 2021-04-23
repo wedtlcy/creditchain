@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.bas.BasMemberInfoDao">
+
+		<!-- bas_member_inf所有列 -->
+	<sql id="basMemberInfoColumns">
+		bmi.CUST_ID custId,
+		bmi.CUST_NAME custName,
+		bmi.CUST_SNAME custSname,
+		bmi.ADDR addr,
+		bmi.MOBILE mobile,
+		bmi.REGISTNAME registName,
+		bmi.ORG_CODE orgCode,
+		bmi.REGNO regNo,
+		bmi.TAX_REGIST_CODE taxRegistCode,
+		bmi.DESC_INFO descInfo,
+		bmi.CONTACT_NAME contactName,
+		bmi.CONTACT_TEL contactTel,
+		bmi.CONTACT_EMAIL contactEmail,
+		bmi.STATUS status,
+		
+		bmi.REMARK remark,
+		bmi.CREATE_TIME createTime,
+		bmi.CREATE_USER createUser,
+		bmi.UPDATE_TIME updateTime,
+		bmi.UPDATE_USER updateUser
+	</sql>
+	
+	<!-- 查询条件 -->
+	<sql id="findBasMemberInfoCondition">
+		<if test="custId != null">
+			and bmi.CUST_ID = #{custId}
+		</if>
+		<if test="custName != null and custName != ''">
+			and bmi.CUST_NAME = #{custName}
+		</if>
+		<if test="custSname != null and custSname != ''">
+			and bmi.CUST_SNAME = #{custSname}
+		</if>
+		<if test="addr != null and addr != ''">
+			and bmi.ADDR = #{addr}
+		</if>
+		<if test="mobile != null and mobile != ''">
+			and bmi.MOBILE = #{mobile}
+		</if>
+		<if test="registName != null and registName != ''">
+			and bmi.REGISTNAME = #{registName}
+		</if>
+		<if test="orgCode != null and orgCode != ''">
+			and bmi.ORG_CODE = #{orgCode}
+		</if>
+		<if test="regNo != null and regNo != ''">
+			and bmi.REGNO = #{regNo}
+		</if>
+		<if test="taxRegistCode != null and taxRegistCode != ''">
+			and bmi.TAX_REGIST_CODE = #{taxRegistCode}
+		</if>
+		<if test="descInfo != null and descInfo != ''">
+			and bmi.DESC_INFO = #{descInfo}
+		</if>
+		<if test="contactName != null and contactName != ''">
+			and bmi.CONTACT_NAME = #{contactName}
+		</if>
+		<if test="contactTel != null and contactTel != ''">
+			and bmi.CONTACT_TEL = #{contactTel}
+		</if>
+		<if test="contactEmail != null and contactEmail != ''">
+			and bmi.CONTACT_EMAIL = #{contactEmail}
+		</if>
+		<if test="status != null and status != ''">
+			and bmi.STATUS = #{status}
+		</if>
+		
+		<if test="remark != null and remark != ''">
+			and bmi.REMARK = #{remark}
+		</if>
+		<if test="createTime != null">
+			and bmi.CREATE_TIME = #{createTime}
+		</if>
+		<if test="createUser != null">
+			and bmi.CREATE_USER = #{createUser}
+		</if>
+	</sql>
+	
+	<sql id="insertKey">
+		<trim suffixOverrides=",">
+            <if test="custName != null and custName != ''">
+                CUST_NAME,
+            </if>
+            <if test="custSname != null and custSname != ''">
+                CUST_SNAME,
+            </if>
+            <if test="addr != null and addr != ''">
+                ADDR,
+            </if>
+             <if test="mobile != null and mobile != ''">
+                MOBILE,
+            </if>
+             <if test="registName != null and registName != ''">
+                REGISTNAME,
+            </if>
+             <if test="orgCode != null and orgCode != ''">
+                ORG_CODE,
+            </if>
+             <if test="regNo != null and regNo != ''">
+                REGNO,
+            </if>
+             <if test="taxRegistCode != null and taxRegistCode != ''">
+                TAX_REGIST_CODE,
+            </if>
+             <if test="descInfo != null and descInfo != ''">
+                DESC_INFO,
+            </if>
+             <if test="contactName != null and contactName != ''">
+                CONTACT_NAME,
+            </if>
+             <if test="contactTel != null and contactTel != ''">
+                CONTACT_TEL,
+            </if>
+             <if test="contactEmail != null and contactEmail != ''">
+                CONTACT_EMAIL,
+            </if>
+             <if test="status != null and status != ''">
+                STATUS,
+            </if>
+            <if test="remark != null and remark != ''">
+                REMARK,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="createUser != null and createUser != ''">
+                CREATE_USER,
+            </if>
+        </trim>
+	</sql>
+	<sql id="insertValue">
+				<trim suffixOverrides=",">
+            <if test="custName != null and custName != ''">
+                #{custName},
+            </if>
+            <if test="custSname != null and custSname != ''">
+             	#{custSname},
+            </if>
+            <if test="addr != null and addr != ''">
+            	 #{addr},
+            </if>
+             <if test="mobile != null and mobile != ''">
+             	 #{mobile},
+            </if>
+             <if test="registName != null and registName != ''">
+             	 #{registName},
+            </if>
+             <if test="orgCode != null and orgCode != ''">
+             	 #{orgCode},
+            </if>
+             <if test="regNo != null and regNo != ''">
+             	 #{regNo},
+            </if>
+             <if test="taxRegistCode != null and taxRegistCode != ''">
+              	#{taxRegistCode},
+            </if>
+             <if test="descInfo != null and descInfo != ''">
+              	#{descInfo},
+            </if>
+             <if test="contactName != null and contactName != ''">
+             	 #{contactName},
+            </if>
+             <if test="contactTel != null and contactTel != ''">
+              	#{contactTel},
+            </if>
+             <if test="contactEmail != null and contactEmail != ''">
+             	 #{contactEmail},
+            </if>
+             <if test="status != null and status != ''">
+             	 #{status},
+            </if>
+            <if test="remark != null and remark != ''">
+             	#{remark},
+            </if>
+            <if test="createTime != null">
+             	#{createTime},
+            </if>
+            <if test="createUser != null and createUser != ''">
+             	#{createUser},
+            </if>
+        </trim>
+	</sql>
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.creditlink.bean.po.bas.BasMemberInfoPo" useGeneratedKeys="true"
+	 keyProperty="productId">
+	 	insert into bas_member_inf(<include refid="insertKey"/>)
+	 	values(<include refid="insertValue"/>)
+	 </insert>
+	 
+	<!-- 查询(单条) -->
+	<select id="find" parameterType="com.creditlink.bean.po.bas.BasMemberInfoPo" resultType="com.creditlink.bean.po.bas.BasMemberInfoPo">
+		select <include refid="basMemberInfoColumns"></include> from bas_member_inf bmi 
+		where 1 = 1 
+		<include refid="findBasMemberInfoCondition"></include>
+		limit 1
+	</select>	
+	
+	<!-- 联盟成员管理查询条件 -->
+	<sql id="memberManagerQueryCondition">
+		<if test="custName != null and custName != ''">
+			and bmi.CUST_NAME like CONCAT('%',#{custName},'%')
+		</if>
+		<if test="custSname != null and custSname != ''">
+			and bmi.CUST_SNAME like CONCAT('%',#{custSname},'%')
+		</if>
+		<if test="status != null and status != ''">
+			and bmi.STATUS = #{status}
+		</if>
+	</sql>
+	
+	<!-- 联盟成员管理查询数量 -->
+	<select id="memberManagerQueryCount" parameterType="java.util.Map" 
+	 resultType="java.lang.Long">
+	  select count(1) from bas_member_inf bmi 
+	  where 1 = 1 
+	  <include refid="memberManagerQueryCondition"></include>
+	 </select>
+	 
+	 <!-- 联盟成员管理查询 -->
+	<select id="memberManagerQuery" parameterType="java.util.Map" 
+	 	resultType="java.util.Map">
+	  select <include refid="basMemberInfoColumns"></include> from bas_member_inf bmi 
+	  where 1 = 1 
+	  <include refid="memberManagerQueryCondition"></include>
+	  order by bmi.CREATE_TIME desc 
+	  limit #{pageStart},#{pageSize}
+	 </select>
+	 
+	  <!-- 更新状态 -->
+	 <update id="updateStatusBatch" parameterType="com.creditlink.bean.bo.UpdateStatusBo">
+	 	update bas_member_inf set STATUS = #{newStatus},UPDATE_USER = #{updateUser},UPDATE_TIME = #{updateTime}
+	 	where  STATUS = #{oldStatus} and CUST_ID in(${ids})
+	 </update>
+	 
+	  <!-- 更新-->
+	<update id="update" parameterType="com.creditlink.bean.po.bas.BasMemberInfoPo">
+		update bas_member_inf 
+		<trim prefix="set" suffixOverrides=",">
+			 <if test="custName != null and custName != ''">
+                CUST_NAME = #{custName},
+            </if>
+            <if test="custSname != null and custSname != ''">
+                CUST_SNAME = #{custSname},
+            </if>
+            <if test="addr != null and addr != ''">
+                ADDR = #{addr},
+            </if>
+             <if test="mobile != null and mobile != ''">
+                MOBILE = #{mobile},
+            </if>
+             <if test="registName != null and registName != ''">
+                REGISTNAME = #{registName},
+            </if>
+             <if test="orgCode != null and orgCode != ''">
+                ORG_CODE = #{orgCode},
+            </if>
+             <if test="regNo != null and regNo != ''">
+                REGNO = #{regNo},
+            </if>
+             <if test="taxRegistCode != null and taxRegistCode != ''">
+                TAX_REGIST_CODE = #{taxRegistCode},
+            </if>
+             <if test="descInfo != null and descInfo != ''">
+                DESC_INFO = #{descInfo},
+            </if>
+             <if test="contactName != null and contactName != ''">
+                CONTACT_NAME = #{contactName},
+            </if>
+             <if test="contactTel != null and contactTel != ''">
+                CONTACT_TEL = #{contactTel},
+            </if>
+             <if test="contactEmail != null and contactEmail != ''">
+                CONTACT_EMAIL = #{contactEmail},
+            </if>
+            <if test="remark != null and remark != ''">
+                REMARK = #{remark},
+            </if>
+            <if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="updateUser != null">
+				UPDATE_USER = #{updateUser},
+			</if>
+		</trim>
+		where CUST_ID = #{custId}
+	</update>
+</mapper>

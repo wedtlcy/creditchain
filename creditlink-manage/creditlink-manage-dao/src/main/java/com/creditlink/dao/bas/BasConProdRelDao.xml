@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.bas.BasConProdRelDao">
+
+	<!-- bas_con_prod_rel -->
+	<sql id="basBasConProdRelColumns">
+		bcpr.ID id,
+		bcpr.PROD_ID prodId,
+		bcpr.CONTRACT_ID contractId,
+		bcpr.STATUS status,
+		
+		bcpr.REMARK remark,
+		bcpr.CREATE_TIME createTime,
+		bcpr.CREATE_USER createUser,
+		bcpr.UPDATE_TIME updateTime,
+		bcpr.UPDATE_USER updateUser
+	</sql>
+	
+	<!-- 查询条件 -->
+	<sql id="findBasConProdRelCondition">
+		<if test="prodId != null">
+			and bcpr.PROD_ID = #{prodId}
+		</if>
+		<if test="contractId != null">
+			and bcpr.CONTRACT_ID = #{contractId}
+		</if>
+		<if test="status != null">
+			and bcpr.STATUS = #{status}
+		</if>
+	</sql>
+	
+	<sql id="insertKey">
+		<trim suffixOverrides=",">
+			<if test="prodId != null">
+				PROD_ID,
+			</if>
+			<if test="contractId != null">
+				CONTRACT_ID,
+			</if>
+			<if test="status != null">
+				STATUS,
+			</if>
+			<if test="remark != null and remark != ''">
+				REMARK,
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME,
+			</if>
+			<if test="createUser != null and createUser != ''">
+				CREATE_USER,
+			</if>
+		</trim>
+	</sql>
+	<sql id="insertValue">
+		<trim suffixOverrides=",">
+			<if test="prodId != null">
+				#{prodId},
+			</if>
+			<if test="contractId != null">
+				#{contractId},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="remark != null and remark != ''">
+				#{remark},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="createUser != null and createUser != ''">
+				#{createUser},
+			</if>
+		</trim>
+	</sql>
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.creditlink.bean.po.bas.BasConProdRelPo"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into bas_con_prod_rel(
+		<include refid="insertKey" />
+		)
+		values(
+		<include refid="insertValue" />
+		)
+	</insert>
+
+	<!-- 合同产品关联管理查询条件 -->
+	<sql id="contractProductManagerQueryCondition">
+		<if test="contractId != null">
+			and bci.ID = #{contractId}
+		</if>
+		<if test="productName != null and productName != ''">
+			and bpi.PRODUCT_NAME like CONCAT('%',#{productName},'%')
+		</if>
+	</sql>
+
+	<!--合同产品关联管理查询数量 -->
+	<select id="contractProductManagerQueryCount" parameterType="java.util.Map"
+		resultType="java.lang.Long">
+		select count(1) from
+		bas_contract_inf bci
+		LEFT JOIN bas_con_prod_rel bcpr ON (bci.ID = bcpr.CONTRACT_ID AND bcpr.`STATUS` = 1)
+		LEFT JOIN bas_product_inf bpi ON (
+		bcpr.PROD_ID = bpi.PRODUCT_ID
+		)
+		where 1 = 1
+		<include refid="contractProductManagerQueryCondition"></include>
+	</select>
+
+	<!-- 合同产品关联管理查询 -->
+	<select id="contractProductManagerQuery" parameterType="java.util.Map"
+		resultType="java.util.Map">
+		select bcpr.ID id,
+		bpi.PRODUCT_ID productId,
+		bpi.PRODUCT_NAME productName,
+		bpi.PRODUCT_FLAG productFlag,
+		bcpr.CREATE_TIME createTime
+		from
+		bas_contract_inf bci
+		LEFT JOIN bas_con_prod_rel bcpr ON (bci.ID = bcpr.CONTRACT_ID)
+		LEFT JOIN bas_product_inf bpi ON (
+		bcpr.PROD_ID = bpi.PRODUCT_ID
+		)
+		where 1 = 1  AND bcpr.STATUS = 1
+		<include refid="contractProductManagerQueryCondition"></include>
+		order by bcpr.CREATE_TIME desc
+		limit #{pageStart},#{pageSize}
+	</select>
+	
+	 <!-- 更新状态 -->
+	 <update id="updateStatusBatch" parameterType="com.creditlink.bean.bo.UpdateStatusBo">
+	 	update bas_con_prod_rel set STATUS = #{newStatus},UPDATE_USER = #{updateUser},UPDATE_TIME = #{updateTime}
+	 	where  STATUS = #{oldStatus} and ID in(${ids})
+	 </update>
+	 
+	 <!-- 查询(单条) -->
+	<select id="find" parameterType="com.creditlink.bean.po.bas.BasConProdRelPo" resultType="com.creditlink.bean.po.bas.BasConProdRelPo">
+		select <include refid="basBasConProdRelColumns"></include> from bas_con_prod_rel bcpr 
+		where 1 = 1 
+		<include refid="findBasConProdRelCondition"></include>
+		limit 1
+	</select>	
+</mapper>

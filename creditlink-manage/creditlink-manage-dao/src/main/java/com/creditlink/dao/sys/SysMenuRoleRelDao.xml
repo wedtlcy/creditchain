@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.sys.SysMenuRoleRelDao">
+
+	<!-- sys_menu_role_rel所有列 -->
+	<sql id="sysMenuRoleRelColumns">
+		smrr.ID id,
+		smrr.MENU_ID menuId,
+		smrr.ROLE_ID roleId,
+		smrr.STATUS status,
+		
+		smrr.REMARK remark,
+		smrr.CREATE_TIME createTime,
+		smrr.CREATE_USER createUser,
+		smrr.UPDATE_TIME updateTime,
+		smrr.UPDATE_USER updateUser
+	</sql>
+	
+	<!-- 查询条件 -->
+	<sql id="findSysMenuRoleRelCondition">
+		<if test="id != null">
+			and smrr.ID = #{id}
+		</if>
+		<if test="menuId != null">
+			and smrr.MENU_ID = #{menuId}
+		</if>
+		<if test="roleId != null">
+			and smrr.ROLE_ID = #{roleId}
+		</if>
+		<if test="status != null">
+			and smrr.STATUS = #{status}
+		</if>
+	</sql>
+	
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.creditlink.bean.po.sys.SysMenuRoleRelPo" useGeneratedKeys="true"
+	 keyProperty="id">
+	 	insert into sys_menu_role_rel
+	 	<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		MENU_ID,ROLE_ID,STATUS,
+	 		REMARK,CREATE_TIME,CREATE_USER,UPDATE_TIME,UPDATE_USER
+	 	</trim>
+	 	<trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+	 		#{menuId},#{roleId},#{status},
+	 		#{remark},#{createTime},#{createUser},#{updateTime},#{updateUser}
+	 	</trim>
+	 </insert>
+	 
+	<!-- 查询(单条) -->
+	<select id="find" parameterType="com.creditlink.bean.po.sys.SysMenuRoleRelPo" resultType="com.creditlink.bean.po.sys.SysMenuRoleRelPo">
+		select <include refid="sysMenuRoleRelColumns"></include> from sys_menu_role_rel smrr 
+		where 1 = 1 
+		<include refid="findSysMenuRoleRelCondition"></include>
+		limit 1
+	</select>	
+	
+	<!-- 查询-->
+	<select id="findAll" parameterType="com.creditlink.bean.po.sys.SysMenuRoleRelPo" resultType="com.creditlink.bean.po.sys.SysMenuRoleRelPo">
+		select <include refid="sysMenuRoleRelColumns"></include> from sys_menu_role_rel smrr 
+		where 1 = 1 
+		<include refid="findSysMenuRoleRelCondition"></include>
+		order by smrr.CREATE_TIME desc 
+	</select>	
+	
+	 <!-- 批量更新状态 -->
+	 <update id="updateStatusBatch" parameterType="java.util.Map">
+	 	update sys_menu_role_rel set STATUS = #{newStatus}, UPDATE_USER = #{updateUser}, UPDATE_TIME = #{updateTime}
+	 	where ROLE_ID=#{roleId} and STATUS = #{oldStatus} 
+	 	<if test="ids != null and ids != ''">
+			and MENU_ID not in(${ids})
+		</if>
+	 </update>
+	 
+	 <!-- 更新状态 -->
+	<update id="updateStatus" parameterType="com.creditlink.bean.po.sys.SysMenuRoleRelPo">
+		update sys_menu_role_rel set STATUS = #{status}, UPDATE_USER = #{updateUser}, UPDATE_TIME = #{updateTime} 
+		where MENU_ID = #{menuId} and ROLE_ID = #{roleId}
+	</update>
+</mapper>

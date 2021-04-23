@@ -1,0 +1,34 @@
+.dialog{
+	&.padding-common{
+		padding: 0 100px;
+	}
+	&#userManageAddUserModals{
+		.textbox-label{
+			width: 100px;
+		}
+	}
+	.contact-menu{
+		overflow: hidden;
+		overflow-y: auto;
+		height: 315px;
+		text-align: left;
+		.tree-node{			
+			padding: 6px 0;
+			.tree-icon{
+				display: none;
+			}
+			.tree-title{
+				font-size: 14px;
+			}
+			.tree-expanded{
+				background-position: -48px 0px;
+			}
+			.tree-collapsed{
+				background-position: -32px 0px;
+			}
+			&.tree-node-selected{
+				background-color: @bg-selected;
+			}
+		}
+	}
+}

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.bas.BasProductInfoDao">
+
+	<!-- bas_product_inf所有列 -->
+	<sql id="basProductInfoColumns">
+		bpi.PRODUCT_ID productId,
+		bpi.PRODUCT_NAME productName,
+		bpi.PRODUCT_TRAIT productTrait,
+		bpi.PRODUCT_MARK productMark,
+		bpi.PRODUCT_TYPE productType,
+		bpi.PRODUCT_FLAG productFlag,
+		bpi.PRODUCT_STATUS productStatus,
+		bpi.QUERY_FEE queryFee,
+		bpi.COIN coin,
+		
+		bpi.REMARK remark,
+		bpi.CREATE_TIME createTime,
+		bpi.CREATE_USER createUser,
+		bpi.UPDATE_TIME updateTime,
+		bpi.UPDATE_USER updateUser
+	</sql>
+	
+	<!-- 查询条件 -->
+	<sql id="findBasProductInfoCondition">
+		<if test="productId != null">
+			and bpi.PRODUCT_ID = #{productId}
+		</if>
+		<if test="productName != null and productName != ''">
+			and bpi.PRODUCT_NAME = #{productName}
+		</if>
+		<if test="productTrait != null and productTrait != ''">
+			and bpi.PRODUCT_TRAIT = #{productTrait}
+		</if>
+		<if test="productType != null">
+			and bpi.PRODUCT_TYPE = #{productType}
+		</if>
+		<if test="productFlag != null and productFlag != ''">
+			and bpi.PRODUCT_FLAG = #{productFlag}
+		</if>
+		<if test="productStatus != null">
+			and bpi.PRODUCT_STATUS = #{productStatus}
+		</if>
+		<if test="remark != null and remark != ''">
+			and bpi.REMARK = #{remark}
+		</if>
+		<if test="createTime != null">
+			and bpi.CREATE_TIME = #{createTime}
+		</if>
+		<if test="createUser != null">
+			and bpi.CREATE_USER = #{createUser}
+		</if>
+	</sql>
+	
+	<sql id="insertKey">
+		<trim suffixOverrides=",">
+            <if test="productName != null and productName != ''">
+                PRODUCT_NAME,
+            </if>
+            <if test="productTrait != null and productTrait != ''">
+                PRODUCT_TRAIT,
+            </if>
+            <if test="productMark != null and productMark != ''">
+                PRODUCT_MARK,
+            </if>
+             <if test="productType != null">
+                PRODUCT_TYPE,
+            </if>
+             <if test="productFlag != null and productFlag != ''">
+                PRODUCT_FLAG,
+            </if>
+             <if test="productStatus != null">
+                PRODUCT_STATUS,
+            </if>
+             <if test="queryFee != null">
+                QUERY_FEE,
+            </if>
+             <if test="coin != null">
+                COIN,
+            </if>
+            <if test="remark != null and remark != ''">
+                REMARK,
+            </if>
+            <if test="createTime != null">
+                CREATE_TIME,
+            </if>
+            <if test="createUser != null and createUser != ''">
+                CREATE_USER,
+            </if>
+        </trim>
+	</sql>
+	<sql id="insertValue">
+				<trim suffixOverrides=",">
+            <if test="productName != null and productName != ''">
+                #{productName},
+            </if>
+            <if test="productTrait != null and productTrait != ''">
+             	#{productTrait},
+            </if>
+            <if test="productMark != null and productMark != ''">
+            	#{productMark},
+            </if>
+             <if test="productType != null">
+               #{productType},
+            </if>
+             <if test="productFlag != null and productFlag != ''">
+               #{productFlag},
+            </if>
+             <if test="productStatus != null">
+             	#{productStatus},
+            </if>
+             <if test="queryFee != null">
+              #{queryFee},
+            </if>
+             <if test="coin != null">
+               #{coin},
+            </if>
+            <if test="remark != null and remark != ''">
+            	#{remark},
+            </if>
+            <if test="createTime != null">
+            	#{createTime},
+            </if>
+            <if test="createUser != null and createUser != ''">
+            	#{createUser},
+            </if>
+        </trim>
+	</sql>
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.creditlink.bean.po.bas.BasProductInfoPo" useGeneratedKeys="true"
+	 keyProperty="productId">
+	 	insert into bas_product_inf(<include refid="insertKey"/>)
+	 	values(<include refid="insertValue"/>)
+	 </insert>
+	 
+	<!-- 查询(单条) -->
+	<select id="find" parameterType="com.creditlink.bean.po.bas.BasProductInfoPo" resultType="com.creditlink.bean.po.bas.BasProductInfoPo">
+		select <include refid="basProductInfoColumns"></include> from bas_product_inf bpi 
+		where 1 = 1 
+		<include refid="findBasProductInfoCondition"></include>
+		limit 1
+	</select>	
+	
+	<!-- 产品管理查询条件 -->
+	<sql id="productManagerQueryCondition">
+		<if test="productName != null and productName != ''">
+			and bpi.PRODUCT_NAME like CONCAT('%',#{productName},'%')
+		</if>
+		<if test="productType != null and productType != ''">
+			and bpi.PRODUCT_TYPE = #{productType}
+		</if>
+		<if test="productFlag != null and productFlag != ''">
+			and bpi.PRODUCT_FLAG = #{productFlag}
+		</if>
+		<if test="productStatus != null and productStatus != ''">
+			and bpi.PRODUCT_STATUS = #{productStatus}
+		</if>
+	</sql>
+	
+	<!-- 产品管理查询数量 -->
+	<select id="productManagerQueryCount" parameterType="java.util.Map" 
+	 resultType="java.lang.Long">
+	  select count(1) from bas_product_inf bpi 
+	  where 1 = 1 
+	  <include refid="productManagerQueryCondition"></include>
+	 </select>
+	 
+	 <!-- 产品管理查询 -->
+	<select id="productManagerQuery" parameterType="java.util.Map" 
+	 	resultType="java.util.Map">
+	  select <include refid="basProductInfoColumns"></include> from bas_product_inf bpi 
+	  where 1 = 1 
+	  <include refid="productManagerQueryCondition"></include>
+	  order by bpi.CREATE_TIME desc 
+	  limit #{pageStart},#{pageSize}
+	 </select>
+	 
+	  <!-- 更新状态 -->
+	 <update id="updateStatusBatch" parameterType="com.creditlink.bean.bo.UpdateStatusBo">
+	 	update bas_product_inf set PRODUCT_STATUS = #{newStatus},UPDATE_USER = #{updateUser},UPDATE_TIME = #{updateTime}
+	 	where  PRODUCT_STATUS = #{oldStatus} and PRODUCT_ID in(${ids})
+	 </update>
+	 
+	  <!-- 更新-->
+	<update id="update" parameterType="com.creditlink.bean.po.bas.BasProductInfoPo">
+		update bas_product_inf 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="productName != null and productName != ''">
+				PRODUCT_NAME = #{productName},
+			</if>
+			<if test="productTrait != null and productTrait != ''">
+				PRODUCT_TRAIT = #{productTrait},
+			</if>
+			<if test="productMark != null and productMark != ''">
+				PRODUCT_MARK = #{productMark},
+			</if>
+			<if test="productType != null">
+				PRODUCT_TYPE = #{productType},
+			</if>
+			<if test="remark != null and remark != ''">
+				REMARK = #{remark},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="updateUser != null">
+				UPDATE_USER = #{updateUser},
+			</if>
+		</trim>
+		where PRODUCT_ID = #{productId}
+	</update>
+</mapper>

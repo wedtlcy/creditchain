@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:aop="http://www.springframework.org/schema/aop"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+      http://www.springframework.org/schema/aop   
+      http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+      http://www.springframework.org/schema/context
+      http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+	
+	<!-- 扫描service -->
+	<context:component-scan base-package="com.creditlink.manager.service" />
+	<!-- 扫描job -->
+	<context:component-scan base-package="com.creditlink.manager.job" />
+	<!-- Service下可以取下面文件中的 值，Controller不能 (注解取值)-->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<!-- 配置信息 -->
+				<value>classpath:config/config-*.properties</value>
+				<!-- 取值 -->
+				<value>classpath:params/params-service.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 任务执行器 -->
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<!-- 核心线程数 -->
+		<property name="corePoolSize" value="10" />
+		<!-- 最大线程数 -->
+		<property name="maxPoolSize" value="50" />
+		<!-- 队列最大长度 >=mainExecutor.maxSize -->
+		<property name="queueCapacity" value="1000" />
+		<!-- 线程池维护线程所允许的空闲时间，默认为60s -->
+		<property name="keepAliveSeconds" value="300" />
+		<!-- 线程池对拒绝任务(无线程可用)的处理策略 -->
+		<property name="rejectedExecutionHandler">
+			<bean class="java.util.concurrent.ThreadPoolExecutor$CallerRunsPolicy" />
+		</property>
+	</bean>
+	
+	<!-- jdbc -->
+	<import resource="classpath:spring-jdbc.xml" />
+	<!-- 定时任务-->
+	<!-- <import resource="classpath*:spring-job.xml" />  -->
+</beans>

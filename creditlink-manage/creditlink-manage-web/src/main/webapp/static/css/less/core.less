@@ -1,0 +1,59 @@
+.content-center{
+	position: relative;
+	z-index: 0;
+	color: @title-thrid;
+	background-color: @bg-primary;
+	border-left: 1px solid @bd-primary;
+	.panel-body{
+		color: @title-thrid;
+		background-color: transparent;
+	}
+	.tabs-header{
+		.tabs-wrap{
+			.tabs{		
+				li{
+					overflow: hidden;
+					border-radius: 0;	
+					margin-left: -6px;
+					margin-bottom: -1px;				
+					background-image: url(./../images/bg/bg_tab.png);
+					background-position: center;
+					background-size: cover;
+					background-repeat: no-repeat;
+					&.tabs-selected{
+						z-index: 2;					
+						background-image: url(./../images/bg/bg_tab_selected.png);
+					}
+					
+					&.tabs-first{	
+						padding-right: 10px;										
+						background-image: url(./../images/bg/bg_first_tab.png);
+						&.tabs-selected{						
+							background-image: url(./../images/bg/bg_first_tab_selected.png);
+						}
+					}
+					
+				}
+			}
+		}
+	}
+}
+.body-content{
+	.datagrid-toolbar{
+		padding: 0 20px 10px;
+		td{
+			.l-btn{
+				padding: 4px 8px;
+		    margin-right: 8px;
+		    border: 1px solid @bd-primary;
+		    -ms-border-radius: 4px;
+		    -moz-border-radius: 4px;
+		    -webkit-border-radius: 4px;
+		    border-radius: 4px;
+		    &:hover{
+		    	.hover;
+		    }
+			}
+		}
+	}
+}

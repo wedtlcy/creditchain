@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:task="http://www.springframework.org/schema/task"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd 
+       http://www.springframework.org/schema/task 
+       http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+    
+    <task:scheduled-tasks>   
+    		<!-- 日志处理(统计索引成功失败次数) -->
+             <task:scheduled ref="fourElementLogJob" method="handler" cron="0 0/3 * * * ?"/> 
+            <!-- 新增索引移库 -->
+               <task:scheduled ref="fourElementAddedOverDueJob" method="handler" cron="0 0/3 14-20 * * ?"/>   
+           <!-- 拉取更新结束任务 -->
+            <task:scheduled ref="fourElementUpdateOverDueJob" method="handler" cron="0 0/20 14-15 * * ?"/> 
+           
+           
+           <!--不需要  <task:scheduled ref="fourElementMoveOverJob" method="handler" cron="0 0/1 * * * ?"/>     -->  
+    </task:scheduled-tasks>  
+      
+</beans>

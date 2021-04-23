@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.index.BankCardFourElementDao">
+	
+	<!--银行卡四要素新增临时表索引  -->
+	<sql id="busIndexBankFourElementColumns">
+		bibf.ID id,
+		bibf.ADDEDTEMPID addedTempId,
+		bibf.PRODUCTID productId,
+		bibf.MEMBERID memberId,
+		bibf.BANKCARD bankCard,
+		bibf.IP ip,
+		bibf.PATH path,
+		bibf.COUNT count,
+		bibf.SUCCESS success,
+		bibf.ERROR error,
+		bibf.STATUS status,
+		
+		bibf.REMARK remark,
+		bibf.CREATETIME createTime,
+		bibf.CREATEUSER createUser,
+		bibf.UPDATETIME updateTime,
+		bibf.UPDATEUSER updateUser		
+	</sql>
+	
+	<!-- bus_index_bank_fourelement表查询条件 -->
+	<sql id="findBusIndexBankFourElementColumnsCondition">
+		<if test="id != null">
+			and bibf.ID = #{id}
+		</if>
+		<if test="addedTempId != null">
+			and bibf.ADDEDTEMPID = #{addedTempId}
+		</if>
+		<if test="productId != null">
+			and bibf.PRODUCTID = #{productId}
+		</if>
+		<if test="memberId != null">
+			and bibf.MEMBERID = #{memberId}
+		</if>
+		<if test="bankCard != null and bankCard !=''">
+			and bibf.BANKCARD = #{bankCard}
+		</if>
+		<if test="ip != null and ip !=''">
+			and bibf.IP = #{ip}
+		</if>
+		<if test="path != null and path !=''">
+			and bibf.PATH = #{path}
+		</if>
+		<if test="status != null and status !=''">
+			and bibf.STATUS = #{status}
+		</if>
+		
+		<if test="createTime != null">
+			and bibf.CREATETIME = #{createTime}
+		</if>
+		<if test="createUser != null and createUser !=''">
+			and bibf.CREATEUSER = #{createUser}
+		</if>
+	</sql>
+	
+	<!-- 查询 -->
+	<select id="find" parameterType="com.creditlink.bean.po.index.BankCardFourElementPo"
+	resultType="com.creditlink.bean.po.index.BankCardFourElementPo">
+	select <include refid="busIndexBankFourElementColumns"></include>
+		from bus_index_bank_fourelement bibf
+		where 1 = 1
+		<include refid="findBusIndexBankFourElementColumnsCondition"></include>
+		limit 1
+	</select>
+	
+	 <!-- 更新状态 -->
+	 <update id="updateStatusBatch" parameterType="com.creditlink.bean.bo.UpdateStatusBo">
+	 	update bus_index_bank_fourelement set STATUS = #{newStatus},UPDATEUSER = #{updateUser},UPDATETIME = #{updateTime}
+	 	where  STATUS = #{oldStatus} and ID in(${ids})
+	 </update>
+	 
+	 <!--查询四要素索引查询条件 -->
+	<sql id="fourElementQueryCondition">
+		<if test="memberId != null">
+			and bibf.MEMBERID = #{memberId}
+		</if>
+		<if test="bankCard != null and bankCard !=''">
+			and bibf.BANKCARD = #{bankCard}
+		</if>
+		<if test="status != null and status !=''">
+			and bibf.STATUS = #{status}
+		</if>
+	</sql>
+	
+	<!-- 查询四要素索引数量 -->
+	<select id="fourElementQueryCount" parameterType="java.util.Map" 
+	 resultType="java.lang.Long">
+	  select count(1) from bus_index_bank_fourelement bibf
+	  where 1 = 1 
+	  <include refid="fourElementQueryCondition"></include>
+	 </select>
+	 
+	 <!-- 查询四要素索引 -->
+	<select id="fourElementQuery" parameterType="java.util.Map" 
+	 	resultType="java.util.Map">
+	  select <include refid="busIndexBankFourElementColumns"></include> from bus_index_bank_fourelement bibf 
+	  where 1 = 1 
+	  <include refid="fourElementQueryCondition"></include>
+	  order by bibf.CREATETIME desc 
+	  limit #{pageStart},#{pageSize}
+	 </select>
+	 
+	 <!-- 更新-->
+	<update id="update" parameterType="com.creditlink.bean.po.index.BankCardFourElementPo">
+		update bus_index_bank_fourelement 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="memberId != null">
+				MEMBERID = #{memberId},
+			</if>
+			<if test="bankCard != null and bankCard != ''">
+				BANKCARD = #{bankCard},
+			</if>
+			<if test="ip != null and ip != ''">
+				IP = #{ip},
+			</if>
+			<if test="path != null and path != ''">
+				PATH = #{path},
+			</if>
+			<if test="remark != null and remark != ''">
+				REMARK = #{remark},
+			</if>
+			<if test="updateTime != null">
+				UPDATETIME = #{updateTime},
+			</if>
+			<if test="updateUser != null">
+				UPDATEUSER = #{updateUser},
+			</if>
+		</trim>
+		where ID = #{id}
+	</update>
+</mapper>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+    	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+    	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd"
+	default-lazy-init="false">
+
+	<!-- 扫描controler -->
+	<context:component-scan base-package="com.creditlink.manager.controller" />
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<!-- 解决json数据中传输中文乱码问题 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<constructor-arg value="UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 在Action里面使用 @Value("${action}")的值 ,在service中取不到哦-->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:params/params-action.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- resources资源 -->
+	<mvc:default-servlet-handler />
+
+ 	 <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+            <!-- set the max upload size100MB -->  
+            <property name="maxUploadSize">  
+                <value>104857600</value>  
+            </property>  
+            <property name="maxInMemorySize">  
+                <value>4096</value>  
+            </property>  
+     </bean> 
+     
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!--  根据客户端的不同的请求决定不同的view进行响应 -->
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="order" value="1" />
+		<property name="mediaTypes">
+			<map>
+				<entry key="json" value="application/json" />
+				<entry key="xml" value="application/xml" />
+				<entry key="pdf" value="application/pdf" />
+			</map>
+		</property>
+		<property name="defaultViews">
+			<list>
+				<!-- 若要返回json数据 方法前需加 @ResponseBody -->
+				<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView"></bean>
+			</list>
+		</property>
+		<property name="viewResolvers">
+			<list>
+				<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+					<property name="prefix" value="/WEB-INF/html/" />
+					<property name="suffix" value=".jsp" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 拦截器配置 -->
+	<mvc:interceptors> 
+		<mvc:interceptor> 
+			<mvc:mapping path="/**/*.do" />
+			<mvc:exclude-mapping path="/login/*.do" />
+			<bean class="com.creditlink.manager.interceptor.LoginInterceptor"></bean> 
+		</mvc:interceptor> 
+		
+		<mvc:interceptor> 
+			<mvc:mapping path="/**/*.do" />
+			<mvc:exclude-mapping path="/login/*.do" />
+			<mvc:exclude-mapping path="/main/*.do" />
+			<bean class="com.creditlink.manager.interceptor.AuthCheckInterceptor"></bean> 
+		</mvc:interceptor> 
+	</mvc:interceptors>
+</beans>

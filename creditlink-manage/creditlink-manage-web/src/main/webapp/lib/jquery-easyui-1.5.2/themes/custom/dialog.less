@@ -1,0 +1,61 @@
+.dialog-content {
+  overflow: auto;
+}
+
+.dialog-toolbar {
+  position: relative;
+  padding: 2px 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ececec;  
+  background-color: #F5F5F5;
+}
+
+.dialog-tool-separator {
+  float: left;
+  height: 24px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #fff;
+  margin: 2px 1px;
+}
+
+.dialog-button {
+  .l-btn{
+    padding: 4px 8px;
+    border: 0;
+    background-color: @font-primary;
+    background-image: url(../../../../static/images/bg/main_selected.png);
+    background-position: center;
+    background-size: contain;
+    background-repeat: repeat-x;
+    color: #fff;
+    &:hover{
+      .hover;
+    }
+    &:nth-child(2){
+      margin-left: 4px;
+      border: 0;
+      color: #000;
+      background-color: transparent;
+      background-image:none;
+    }
+    .l-btn-left{
+      border: 0;
+    }
+  }
+}
+
+.window-thinborder {
+  .dialog-toolbar{    
+    border-left: transparent;
+    border-right: transparent;
+    border-top-color: #F5F5F5;
+  }
+  .dialog-button{    
+    top: 0px;
+    padding: 5px 8px 8px 8px;
+    border-left: transparent;
+    border-right: transparent;
+    border-bottom: transparent;
+  }
+}

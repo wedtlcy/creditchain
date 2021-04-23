@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.bas.BasUserInfoDao">
+
+	<!-- bas_user_inf所有列 -->
+	<sql id="basUserInfoColumns">
+		bui.USER_ID userId,
+		bui.USER_NAME userName,
+		bui.USER_PWD userPwd,
+		bui.USER_STATUS userStatus,
+		bui.IS_MEMBER isMember,
+		bui.MEMBER_ID memberId,
+		bui.USER_MOBILE userMobile,
+		bui.USER_EMAIL userEmail,
+		bui.REMARK remark,
+		bui.CREATE_TIME createTime,
+		bui.CREATE_USER createUser,
+		bui.UPDATE_TIME updateTime,
+		bui.UPDATE_USER updateUser
+	</sql>
+	
+	<!-- bas_user_inf表查询条件 -->
+	<sql id="findBasUserInfoCondition">
+		<if test="userId != null">
+			and bui.USER_ID = #{userId}
+		</if>
+		<if test="userName != null and userName != ''">
+			and bui.USER_NAME = #{userName}
+		</if>
+		<if test="userPwd != null and userPwd != ''">
+			and bui.USER_PWD = #{userPwd}
+		</if>
+		<if test="userStatus != null">
+			and bui.USER_STATUS = #{userStatus}
+		</if>
+		<if test="isMember != null">
+			and bui.IS_MEMBER = #{isMember}
+		</if>
+		<if test="memberId != null">
+			and bui.MEMBER_ID = #{memberId}
+		</if>
+		<if test="userMobile != null and userMobile != ''">
+			and bui.USER_MOBILE = #{userMobile}
+		</if>
+		<if test="userEmail != null and userEmail != ''">
+			and bui.USER_EMAIL = #{userEmail}
+		</if>
+		<if test="remark != null and remark != ''">
+			and bui.REMARK = #{remark}
+		</if>
+		<if test="createTime != null and createTime != ''">
+			and bui.CREATE_TIME = #{createTime}
+		</if>
+		<if test="createUser != null and createUser != ''">
+			and bui.CREATE_USER = #{createUser}
+		</if>
+	</sql>
+	
+	<!--单个插入  -->
+	<insert id="insert" parameterType="com.creditlink.bean.po.bas.BasUserInfoPo" useGeneratedKeys="true"
+	 keyProperty="userId">
+	 	insert into bas_user_inf
+	 	<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		USER_NAME,USER_PWD,USER_STATUS,IS_MEMBER,MEMBER_ID,USER_MOBILE,USER_EMAIL,
+	 		REMARK,CREATE_TIME,CREATE_USER,UPDATE_TIME,UPDATE_USER
+	 	</trim>
+	 	<trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+	 		#{userName},#{userPwd},#{userStatus},#{isMember},#{memberId},#{userMobile},#{userEmail},
+	 		#{remark},#{createTime},#{createUser},#{updateTime},#{updateUser}
+	 	</trim>
+	 </insert>
+	 
+	<!-- 查询单个 -->
+	<select id="find" parameterType="com.creditlink.bean.po.bas.BasUserInfoPo" resultType="com.creditlink.bean.po.bas.BasUserInfoPo">
+		select <include refid="basUserInfoColumns"></include> from bas_user_inf bui 
+		where 1 = 1 
+		<include refid="findBasUserInfoCondition"></include>
+		limit 1
+	</select>	
+	
+	<!-- 更新-->
+	<update id="update" parameterType="com.creditlink.bean.po.bas.BasUserInfoPo">
+		update bas_user_inf 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="userPwd != null and userPwd != ''">
+				USER_PWD = #{userPwd},
+			</if>
+			<if test="userStatus != null">
+				USER_STATUS = #{userStatus},
+			</if>
+			<if test="isMember != null">
+				IS_MEMBER = #{isMember},
+			</if>
+				MEMBER_ID = #{memberId},
+				USER_MOBILE = #{userMobile},
+				USER_EMAIL = #{userEmail},
+				REMARK = #{remark},
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="updateUser != null and updateUser != ''">
+				UPDATE_USER = #{updateUser},
+			</if>
+		</trim>
+		where USER_ID = #{userId}
+	</update>
+	
+	 <!-- 批量更新用户状态 -->
+	 <update id="updateStatusBatch" parameterType="com.creditlink.bean.bo.UpdateStatusBo">
+	 	update bas_user_inf set USER_STATUS = #{newStatus},UPDATE_USER = #{updateUser},UPDATE_TIME = #{updateTime}
+	 	where  USER_STATUS = #{oldStatus} and USER_ID in(${ids})
+	 </update>
+	 
+	<!-- 查询所有 -->
+	<select id="findAll" parameterType="com.creditlink.bean.po.bas.BasUserInfoPo" 
+		resultType="com.creditlink.bean.po.bas.BasUserInfoPo">
+		select <include refid="basUserInfoColumns"></include> from bas_user_inf bui 
+		where 1 = 1 
+		<include refid="findBasUserInfoCondition"></include>
+		order by bui.CREATE_TIME desc 
+	</select>	
+	 
+	<!-- 用户管理查询数量 -->
+	<select id="userManagerQueryCount" parameterType="java.util.Map" 
+	 resultType="java.lang.Long">
+	  select count(1) from bas_user_inf bui 
+	  where 1 = 1 
+	  <include refid="findBasUserInfoCondition"></include>
+	 </select>
+	 
+	 <!-- 用户管理查询 -->
+	<select id="userManagerQuery" parameterType="java.util.Map" 
+	 	resultType="java.util.Map">
+	  select <include refid="basUserInfoColumns"></include> from bas_user_inf bui 
+	  where 1 = 1 
+	  <include refid="findBasUserInfoCondition"></include>
+	  order by bui.CREATE_TIME desc 
+	  limit #{pageStart},#{pageSize}
+	 </select>
+	 
+</mapper>

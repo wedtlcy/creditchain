@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.sys.SysMenuInfoDao">
+
+	<!-- sys_menu_inf所有列 -->
+	<sql id="sysMenuInfoColumns">
+		smi.MENU_ID menuId,
+		smi.MENU_PAR_ID menuParId,
+		smi.MENU_NAME menuName,
+		smi.MENU_URL menuUrl,
+		smi.MENU_TYPE menuType,
+		smi.MENU_CODE menuCode,
+		smi.STATUS status,
+		smi.IS_LEAF isLeaf,
+		smi.REMARK remark,
+		smi.CREATE_TIME createTime,
+		smi.CREATE_USER createUser,
+		smi.UPDATE_TIME updateTime,
+		smi.UPDATE_USER updateUser
+	</sql>
+	
+	<!-- 查询条件 -->
+	<sql id="findSysMenuInfoCondition">
+		<if test="menuId != null">
+			and smi.MENU_ID = #{menuId}
+		</if>
+		<if test="menuParId != null">
+			and smi.MENU_PAR_ID = #{menuParId}
+		</if>
+		<if test="menuName != null and menuName != ''">
+			and smi.MENU_NAME like CONCAT('%',#{menuName},'%') 
+		</if>
+		<if test="menuUrl != null and menuUrl != ''">
+			and smi.MENU_URL like CONCAT('%',#{menuUrl},'%')
+		</if>
+		<if test="menuType != null and menuType != ''">
+			and smi.MENU_TYPE = #{menuType}
+		</if>
+		<if test="menuCode != null and menuCode != ''">
+			and smi.MENU_CODE = #{menuCode}
+		</if>
+		<if test="status != null">
+			and smi.STATUS = #{status}
+		</if>
+		<if test="isLeaf != null and isLeaf != ''">
+			and smi.IS_LEAF = #{isLeaf}
+		</if>
+	</sql>
+	
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.creditlink.bean.po.sys.SysMenuInfoPo" useGeneratedKeys="true"
+	 keyProperty="menuId">
+	 	insert into sys_menu_inf
+	 	<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		MENU_ID,MENU_PAR_ID,MENU_NAME,MENU_URL,MENU_TYPE,MENU_CODE,STATUS,IS_LEAF,
+	 		REMARK,CREATE_TIME,CREATE_USER,UPDATE_TIME,UPDATE_USER
+	 	</trim>
+	 	<trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+	 		#{menuId},#{menuParId},#{menuName},#{menuUrl},#{menuType},#{menuCode},#{status},#{isLeaf},
+	 		#{remark},#{createTime},#{createUser},#{updateTime},#{updateUser}
+	 	</trim>
+	 </insert>
+	 
+	<!-- 查询单个 -->
+	<select id="find" parameterType="com.creditlink.bean.po.sys.SysMenuInfoPo" resultType="com.creditlink.bean.po.sys.SysMenuInfoPo">
+		select <include refid="sysMenuInfoColumns"></include> from sys_menu_inf smi 
+		where 1 = 1 
+		<include refid="findSysMenuInfoCondition"></include>
+		limit 1
+	</select>	
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="com.creditlink.bean.po.sys.SysMenuInfoPo">
+		update sys_menu_inf 
+		<trim prefix="set" suffixOverrides=",">
+			<if test="menuParId != null">
+				MENU_PAR_ID = #{menuParId},
+			</if>
+			<if test="menuName != null and menuName != ''">
+				MENU_NAME = #{menuName},
+			</if>
+			<if test="menuUrl != null and menuUrl != ''">
+				MENU_URL = #{menuUrl},
+			</if>
+			<if test="menuType != null and menuType != ''">
+				MENU_TYPE = #{menuType},
+			</if>
+			<if test="menuCode != null and menuCode != ''">
+				MENU_CODE = #{menuCode},
+			</if>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+			<if test="isLeaf != null and isLeaf != ''">
+				IS_LEAF = #{isLeaf},
+			</if>
+				REMARK = #{remark},
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="updateUser != null">
+				UPDATE_USER = #{updateUser},
+			</if>
+		</trim>
+		where MENU_ID = #{menuId}
+	</update>
+	
+	<!-- 查询-->
+	<select id="findAll" parameterType="com.creditlink.bean.po.sys.SysMenuInfoPo" resultType="com.creditlink.bean.po.sys.SysMenuInfoPo">
+		select <include refid="sysMenuInfoColumns"></include> from sys_menu_inf smi 
+		where 1 = 1 
+		<include refid="findSysMenuInfoCondition"></include>
+	</select>	
+	
+	<!-- 批量更新菜单状态 -->
+	 <update id="updateStatusBatch" parameterType="com.creditlink.bean.bo.UpdateStatusBo">
+	 	update sys_menu_inf set STATUS = #{newStatus},UPDATE_USER = #{updateUser},UPDATE_TIME = #{updateTime}
+	 	where  STATUS = #{oldStatus} and MENU_ID in(${ids})
+	 </update>
+	 
+	<!-- 获取用户菜单 -->
+	<select id="getUserMenuInfo" parameterType="com.creditlink.bean.po.bas.BasUserInfoPo"
+	resultType="com.creditlink.bean.po.sys.SysMenuInfoPo">
+	select <!-- <include refid="sysMenuInfoColumns"></include> -->
+		DISTINCT(smi.MENU_ID) menuId,
+		smi.MENU_PAR_ID menuParId,
+		smi.MENU_NAME menuName,
+		smi.MENU_URL menuUrl,
+		smi.MENU_TYPE menuType,
+		smi.MENU_CODE menuCode,
+		smi.STATUS status,
+		smi.IS_LEAF isLeaf,
+		smi.REMARK remark,
+		smi.CREATE_TIME createTime,
+		smi.CREATE_USER createUser,
+		smi.UPDATE_TIME updateTime,
+		smi.UPDATE_USER updateUser
+	from sys_menu_inf smi
+	left join sys_menu_role_rel t2 on smi.menu_id=t2.menu_id
+	left join sys_user_role_rel t3 on t2.role_id=t3.role_id
+	where smi.status='1'
+	and smi.menu_type='0' 
+	and t2.status='1'
+	and t3.status='1'
+	and t3.user_id=#{userId}
+	</select>
+	
+	<!-- 菜单管理查询 -->
+	<select id="menuManagerQueryCount" parameterType="java.util.Map" 
+	 resultType="java.lang.Long">
+	  select count(1) from sys_menu_inf smi  
+	  where 1 = 1 
+	  <include refid="findSysMenuInfoCondition"></include>
+	 </select>
+	 
+	 <!--菜单管理查询数量 -->
+	<select id="menuManagerQuery" parameterType="java.util.Map" 
+	 	resultType="java.util.Map">
+	  select <include refid="sysMenuInfoColumns"></include> from sys_menu_inf smi 
+	  where 1 = 1 
+	  <include refid="findSysMenuInfoCondition"></include>
+	  limit #{pageStart},#{pageSize}
+	 </select>
+	 
+	 <!-- 查询用户授权菜单树 -->
+	 <select id="queryUserAuthMenu" parameterType="com.creditlink.bean.po.bas.BasUserInfoPo" resultType="com.creditlink.bean.po.sys.SysMenuInfoPo">
+		SELECT
+			 DISTINCT(t.MENU_ID) menuId,
+			t.MENU_NAME menuName,
+			t.MENU_PAR_ID menuParId,
+			t.menu_url menuUrl,
+			t.status status,
+			t.menu_type menuType,
+			t.is_leaf isLeaf
+		FROM
+			sys_menu_inf t,
+			sys_menu_role_rel t1,
+			sys_user_role_rel t2,
+			bas_user_inf t3,
+			sys_role_inf t4
+		WHERE
+			t1.MENU_ID = t.MENU_ID
+		AND t1.ROLE_ID = t2.ROLE_ID
+		AND t1.ROLE_ID = t4.ROLE_ID
+		AND t.`STATUS` = '1'
+		AND t1.`STATUS` = '1'
+		AND t2.`STATUS` = '1'
+		AND t4.`STATUS` = '1'
+		AND t2.USER_ID = t3.USER_ID
+		AND t.menu_type = 0 
+		AND t3.USER_ID = #{userId}
+		ORDER BY
+			t.MENU_ID
+	 </select>
+	 
+	 <!-- 获取用户授权url -->
+	 <select id="getUserAuthUrl" parameterType="java.util.Map" resultType="java.lang.String">
+	 		SELECT  DISTINCT(smi.MENU_URL) url FROM
+				sys_user_role_rel surr
+			  LEFT JOIN sys_menu_role_rel smrr ON(surr.ROLE_ID = smrr.ROLE_ID)
+			  LEFT JOIN sys_menu_inf smi ON(smrr.MENU_ID = smi.MENU_ID)
+			WHERE 1=1
+			  AND surr.`STATUS` = 1
+			  AND smrr.`STATUS` = 1
+			  and smi.`STATUS` = 1
+			  AND (smi.MENU_URL IS NOT NULL OR smi.MENU_URL = '')
+				AND surr.USER_ID = #{userId}
+	 </select>
+	 
+	 <select id="getMaxMenuId" parameterType="java.lang.Long" resultType="java.lang.Long">
+	 	select max(smi.MENU_ID) from sys_menu_inf smi where smi.MENU_PAR_ID = #{menuParId}
+	 </select>
+</mapper>

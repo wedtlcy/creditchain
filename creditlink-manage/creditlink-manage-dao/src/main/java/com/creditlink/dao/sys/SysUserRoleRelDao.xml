@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.creditlink.dao.sys.SysUserRoleRelDao">
+
+	<!-- sys_user_role_rel所有列 -->
+	<sql id="sysUserRoleRelColumns">
+		surr.ID id,
+		surr.USER_ID userId,
+		surr.ROLE_ID roleId,
+		surr.STATUS status,
+		surr.REMARK remark,
+		surr.CREATE_TIME createTime,
+		surr.CREATE_USER createUser,
+		surr.UPDATE_TIME updateTime,
+		surr.UPDATE_USER updateUser
+	</sql>
+	
+	<!-- 查询条件 -->
+	<sql id="findSysUserRoleRelCondition">
+		<if test="id != null">
+			and surr.ID = #{id}
+		</if>
+		<if test="userId != null">
+			and surr.USER_ID = #{userId}
+		</if>
+		<if test="roleId != null">
+			and surr.ROLE_ID = #{roleId}
+		</if>
+		<if test="status != null">
+			and surr.STATUS = #{status}
+		</if>
+	</sql>
+	
+	<!--单个插入  -->
+	<insert id="insert" parameterType="com.creditlink.bean.po.sys.SysUserRoleRelPo" useGeneratedKeys="true"
+	 keyProperty="id">
+	 	insert into sys_user_role_rel
+	 	<trim prefix="(" suffix=")" suffixOverrides=",">
+	 		USER_ID,ROLE_ID,STATUS,
+	 		REMARK,CREATE_TIME,CREATE_USER,UPDATE_TIME,UPDATE_USER
+	 	</trim>
+	 	<trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+	 		#{userId},#{roleId},#{status},
+	 		#{remark},#{createTime},#{createUser},#{updateTime},#{updateUser}
+	 	</trim>
+	 </insert>
+	<!-- 查询(单条) -->
+	<select id="find" parameterType="com.creditlink.bean.po.sys.SysUserRoleRelPo" resultType="com.creditlink.bean.po.sys.SysUserRoleRelPo">
+		select <include refid="sysUserRoleRelColumns"></include> from sys_user_role_rel surr 
+		where 1 = 1 
+		<include refid="findSysUserRoleRelCondition"></include>
+		limit 1
+	</select>	
+	
+	<!-- 查询-->
+	<select id="findAll" parameterType="com.creditlink.bean.po.sys.SysUserRoleRelPo" resultType="com.creditlink.bean.po.sys.SysUserRoleRelPo">
+		select <include refid="sysUserRoleRelColumns"></include> from sys_user_role_rel surr 
+		where 1 = 1 
+		<include refid="findSysUserRoleRelCondition"></include>
+		order by surr.CREATE_TIME desc 
+	</select>	
+	
+	 <!-- 批量更新状态 -->
+	 <update id="updateStatusBatch" parameterType="java.util.Map">
+	 	update sys_user_role_rel set STATUS = #{newStatus}, UPDATE_USER = #{updateUser}, UPDATE_TIME = #{updateTime}
+	 	where USER_ID = #{userId} and STATUS = #{oldStatus} and ROLE_ID != #{roleId}
+	 </update>
+	 
+	 <!-- 更新状态 -->
+	 <update id="updateStatus" parameterType="com.creditlink.bean.po.sys.SysMenuRoleRelPo">
+		update sys_user_role_rel set STATUS = #{status}, UPDATE_USER = #{updateUser}, UPDATE_TIME = #{updateTime} 
+		where USER_ID = #{userId} and ROLE_ID = #{roleId}
+	 </update>
+</mapper>

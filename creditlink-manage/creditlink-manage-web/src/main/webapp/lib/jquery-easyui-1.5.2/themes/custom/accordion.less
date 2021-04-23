@@ -1,0 +1,86 @@
+.accordion {
+  overflow: hidden;
+  border-width: 1px;
+  border-style: solid;  
+  border-color: #D4D4D4;
+  .accordion-header{
+    // border-width: 0 0 1px;
+    cursor: pointer;
+    filter: none;
+  }
+  .accordion-body {
+    // border-width: 0 0 1px;
+  }
+  .panel-last{
+    >.accordion-header{
+      // border-bottom-color: #F2F2F2;
+    }
+    >.accordion-body{
+      // border-bottom-color: #ffffff;
+    }
+    >.accordion-header-selected,
+    .accordion-header-border{
+      // border-bottom-color: #D4D4D4;
+    }
+  }
+  >.panel-hleft{
+    float: left;
+    >.panel-header{
+      border-width: 0 1px 0 0;
+    }
+    >.panel-body{
+      border-width: 0 1px 0 0;
+    }
+    &.panel-last{
+      >.accordion-header{
+        border-right-color: @bd-subordinate;
+      }
+      >.accordion-body{
+        border-right-color: @bd-subordinate;
+      }
+      >.accordion-header-selected
+      .accordion-header-border{
+        border-right-color: @bd-subordinate;
+      }
+    }
+  }
+  >.panel-hright{
+    float: right;
+    >.panel-header{
+      border-width: 0 0 0 1px;
+    }
+    >.panel-body {
+      border-width: 0 0 0 1px;
+    }
+    &.panel-last{
+      >.accordion-header{
+        border-left-color: @bd-subordinate;
+      }
+      >.accordion-body{
+        border-left-color: @bd-subordinate;
+      }
+      >.accordion-header-selected,
+      .accordion-header-border{
+        border-left-color: @bd-subordinate;
+      }
+    }
+  }
+}
+
+.accordion-noborder {
+  border-width: 0;
+  .accordion-header {
+    // border-width: 0 0 1px;
+  }
+  .accordion-body {
+    border-width: 0 0 0;
+  }
+}
+
+.accordion-collapse {
+  background: url('images/accordion_arrows.png') no-repeat 0 0;
+}
+.accordion-expand {
+  background: url('images/accordion_arrows.png') no-repeat -16px 0;
+}
+
